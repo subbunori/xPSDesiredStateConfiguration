@@ -226,7 +226,10 @@ function Set-TargetResource
         [ValidateNotNull()]
         [System.Management.Automation.PSCredential]
         [System.Management.Automation.Credential()]
-        $Credential
+        $Credential,
+
+        [Boolean]
+        $UpdatePassword = $False
     )
 
     if ($PSBoundParameters.ContainsKey('StartupType'))
@@ -285,7 +288,7 @@ function Set-TargetResource
         # Update the properties of the service if needed
         $setServicePropertyParameters = @{}
 
-        $servicePropertyParameterNames = @( 'StartupType', 'BuiltInAccount', 'Credential', 'DesktopInteract', 'DisplayName', 'Description', 'Dependencies' )
+        $servicePropertyParameterNames = @( 'StartupType', 'BuiltInAccount', 'Credential','UpdatePassword', 'DesktopInteract', 'DisplayName', 'Description', 'Dependencies' )
 
         foreach ($servicePropertyParameterName in $servicePropertyParameterNames)
         {
@@ -437,7 +440,10 @@ function Test-TargetResource
         [ValidateNotNull()]
         [System.Management.Automation.PSCredential]
         [System.Management.Automation.Credential()]
-        $Credential
+        $Credential,
+		
+		[Boolean]
+        $UpdatePassword = $false
     )
 
     if ($PSBoundParameters.ContainsKey('StartupType'))
@@ -533,9 +539,14 @@ function Test-TargetResource
         }
         elseif ($PSBoundParameters.ContainsKey('Credential'))
         {
-            $expectedStartName = ConvertTo-StartName -Username $Credential.UserName
-
-            if ($serviceResource.BuiltInAccount -ine $expectedStartName)
+            if ($UpdatePassword)
+            {
+ 				Write-Verbose -Message ($script:localizedData.UpdatePasswordSetToTrue)
+                return $false
+            }
+			
+			$expectedStartName = ConvertTo-StartName -Username $Credential.UserName
+			if ($serviceResource.BuiltInAccount -ine $expectedStartName)
             {
                 Write-Verbose -Message ($script:localizedData.ServiceCredentialDoesNotMatch -f $Name, $Credential.UserName, $serviceResource.BuiltInAccount)
                 return $false
@@ -1324,6 +1335,10 @@ function Set-ServiceAccountProperty
         [System.Management.Automation.Credential()]
         $Credential,
 
+		[Parameter()]
+        [Boolean]
+        $UpdatePassword,
+
         [Parameter()]
         [Boolean]
         $DesktopInteract
@@ -1354,6 +1369,12 @@ function Set-ServiceAccountProperty
             $changeServiceArguments['StartName'] = $startName
             $changeServiceArguments['StartPassword'] = $Credential.GetNetworkCredential().Password
         }
+
+		elseif ($UpdatePassword)
+		{
+			Write-Verbose $script:localizedData.UpdatingPassword
+			$changeServiceArguments['StartPassword'] = $Credential.GetNetworkCredential().Password
+		}
     }
 
     if ($PSBoundParameters.ContainsKey('DesktopInteract'))
@@ -1521,7 +1542,10 @@ function Set-ServiceProperty
         [ValidateNotNull()]
         [System.Management.Automation.PSCredential]
         [System.Management.Automation.Credential()]
-        $Credential
+        $Credential,
+
+		[Boolean]
+        $UpdatePassword = $False
     )
 
     # Update display name and/or description if needed
@@ -1560,6 +1584,10 @@ function Set-ServiceProperty
     elseif ($PSBoundParameters.ContainsKey('Credential'))
     {
         $setServiceAccountPropertyParameters['Credential'] = $Credential
+		if($UpdatePassword)
+		{
+			$setServiceAccountPropertyParameters['UpdatePassword'] = $UpdatePassword
+		}
     }
 
     if ($PSBoundParameters.ContainsKey('DesktopInteract'))

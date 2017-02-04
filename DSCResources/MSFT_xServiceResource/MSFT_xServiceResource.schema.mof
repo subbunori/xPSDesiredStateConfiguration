@@ -8,6 +8,7 @@ class MSFT_xServiceResource : OMI_BaseResource
   [Write,Description("Indicates the startup type for the service."),ValueMap{"Automatic", "Manual", "Disabled"},Values{"Automatic", "Manual", "Disabled"}] String StartupType;
   [Write,Description("Indicates the sign-in account to use for the service."),ValueMap{"LocalSystem", "LocalService", "NetworkService"},Values{"LocalSystem", "LocalService", "NetworkService"}] String BuiltInAccount;
   [Write,Description("The credential to run the service under."),EmbeddedInstance("MSFT_Credential")] String Credential;
+  [Write,Description("Indicates if a password for service has to be changed. Defaults to False.")] Boolean UpdatePassword;
   [Write,Description("The service can create or communicate with a window on the desktop. Must be false for services not running as LocalSystem. Defaults to False.")] Boolean DesktopInteract;
   [Write,Description("Indicates the state you want to ensure for the service. Defaults to Running."),ValueMap{"Running", "Stopped", "Ignore"},Values{"Running", "Stopped", "Ignore"}] String State;
   [Write,Description("The display name of the service.")] String DisplayName;

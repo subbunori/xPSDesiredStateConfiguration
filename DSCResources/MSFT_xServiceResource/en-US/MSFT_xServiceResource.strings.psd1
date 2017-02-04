@@ -21,6 +21,8 @@ ConvertFrom-StringData @'
     ServiceStartupTypeDoesNotMatch = The start mode of service {0} does not match the expected start mode.
     ServicePropertyDoesNotMatch = The service property {0} of service {1} does not match the expected value. The expected value is {2}. The actual value is {3}.
     ServiceCredentialDoesNotMatch = The start name of service {0} does not match the expected username from the given credential. The expected value is {1}. The actual value is {2}.
+	UpdatePasswordSetToTrue = Update Password property set to true.
+	UpdatingPassword = Updating password...Restart service to start using new password...
     ServiceDeletionSucceeded = The service {0} has been successfully deleted.
     ServiceDeletionFailed = Failed to delete service {0}.
     WaitingForServiceDeletion = Waiting for service {0} to be deleted.
