@@ -558,6 +558,11 @@ None
 
 ### Unreleased
 
+### 5.2.1.0
+
+* xService
+    * Added support to update password (force). This resolves issue #291 (https://github.com/PowerShell/xPSDesiredStateConfiguration/issues/291)
+
 ### 5.2.0.0
 
 * xWindowsProcess
